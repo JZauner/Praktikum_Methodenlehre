@@ -1,0 +1,136 @@
+---
+title: "Praktikum Methodenlehre"
+subtitle: "Teil 1 - Code ausführen"
+author: "Johannes Zauner"
+format: html
+---
+
+## Einführung
+
+Dieses Dokument gibt eine Einführung in R (und Quarto), am Beispiel eines Pupillometrie-Datensatzes. Im Vorfeld dieser Einführung wurden Messdaten aus einem Pupillometrie-Versuch bereits aufbereitet. Der Inhalt dieses Dokuments gliedert sich in:
+
+-   *Wie funktioniert R ganz grundsätzlich?*
+-   *Wie lade ich Daten in R?*
+-   *Wie erstelle ich eine ansprechende Grafik in R?*
+-   *Wie führe ich einen statistischen Test in R aus?*
+
+Den Rahmen für dieses Praktikum bildet *Quarto*, ein Open-Science Veröffentlichungswerkzeug. Grundsätzlich ist Quarto sprachenunabhängig, d.h. es funktioniert mit R, Python, und anderen Programmiersprachen. Quarto ist eigentlich nur eine *Markup*-Sprache. D.h. man schreibt Fließtext und bestimmte Zeichen oder Zeichenfolgen, werden von Quarto `interpretiert`. Mit Klick auf **Render** kann man das Ergebnis betrachten.
+
+## Code ausführen
+### Einfache Rechenoperationen
+
+Die Interpretation des Fließtextes endet nicht bei reinen Formatierungen. Auch Code kann so ausgeführt werden. Sogenannte Code-`Chunks` werden als R Code betrachtet. Unter dem Chunk wird das Ergebnis dargestellt
+
+```{r}
+1 + 1
+```
+
+Ein neuer Codechunk kann einfach kopiert, oder über `Code > Insert Chunk`, bzw. `CMD(Mac) / Ctrl(Win) + Alt + I` eingefügt werden.
+
+```{r}
+
+10 * 20
+4^5
+
+```
+
+Code-Chunks können entweder gesamthaft ausgeführt werden (`Play`-Symbol), oder Zeilenweise. Für die Zeilenweise Ausführung, wechselt man mit dem Cursor zur gewünschten Zeile und drückt `CMD(Mac)/CTRL(Win) + Enter`.
+
+Die Inputs zu Berechnungen - oder deren Ergebnisse können in sogenannten Variablen gespeichert werden. Dies funktioniert mit einer Zuweisung `<-` (Schnellbefehl `Alt + Minus`)
+
+```{r}
+x <- 10
+x
+```
+
+```{r}
+x*10
+y <- x*10
+y
+x*y
+z <- x+y
+z
+```
+
+### Funktionen
+
+R versteht geläufige Rechenoperationen. Komplexere Operationen erfordern sogenannte Funktionen. Eine Funktion führt eine Reihe vorbestimmter oder selbstdefinierter Berechnungen und Befehle aus. Bspw. gibt die Funktion `Sys.time()` die aktuelle Uhrzeit aus.
+
+```{r}
+Sys.time()
+```
+
+Die meisten Funktionen benötigen Input um zu funktionieren. Die im Paket `numbers` gespeicherte Funktion `Primes` z.B., gibt alle Primzahlen bis zum eingegebenen Wert aus.
+
+```{r}
+numbers::Primes(100)
+```
+
+Im Gegensatz zu den bisherigen, singulären (oder skalaren) Ausgaben, ist die Ausgabe der `Primes`-Funktion ein Vektor an Zahlen. Vektoren sind unglaublich wichtig und nützlich im Umgang mit R, deshalb schauen wir sie uns näher an.
+
+### Vektoren
+
+Vektoren sind eine Aneinanderreihung von gleichartigen Werten: Zahlen, Text, Logik-Werten (Wahr/Falsch), u.a. man kann selbst einen Vektor erstellen, indem die Vektorwerte in die Funktion `c()` gehüllt werden. Auch Vektoren können in Variablen gespeichert werden.
+
+```{r}
+c(1, 5, 10, 20)
+x <- c(1, 5, 10, 20)
+x
+```
+
+Will man nur einen bestimmten Wert eines Vektors, z.B. den 3., dann greift man über eckige Klammern darauf zu
+```{r}
+x
+x[3]
+```
+
+
+Vektoren sind nützlich, denn mit Ihnen können vektorisierte Berechnungen durchgeführt werden. 
+```{r}
+x * 20
+x * x
+y <- c(20, 50, 80, 100)
+x * y
+z <- x * y
+z
+```
+
+Die Kombination von Vektoren und Funktionen erlaubt die ersten komplexeren Berechnungen
+```{r}
+mean(c(1, 5, 10, 20))
+mean(x)
+mean(y)
+median(x)
+x_mean <- mean(x)
+x_mean
+```
+
+### Tabellen
+
+Der letzte Komplexitätsgrad, den wir an dieser Stelle einführen, sind Tabellen. Tabellen kann man sich in R als Aneinanderreihung von Vektoren vorstellen, jeder Vektor ist eine Spalte. Wichtig ist, dass alle Vektoren gleich lang sein müssen.
+
+```{r}
+x
+y
+z
+
+Tabelle <- data.frame(x, y, z)
+Tabelle
+```
+
+Auch bei Tabellen kann man direkt auf einzelne Teile zugreifen. mit dem `$`-Symbol wählt man eine Spalte (Vektor) aus.
+
+```{r}
+Tabelle$y
+Tabelle$y[3]
+```
+
+Tabellen erlauben die einfache und schnelle Ergänzung von Spalten.
+
+```{r}
+Tabelle$summe <- Tabelle$x + Tabelle$y + Tabelle$z
+Tabelle$summe
+Tabelle
+```
+
+Das beschließt diesen ersten Teil in R.

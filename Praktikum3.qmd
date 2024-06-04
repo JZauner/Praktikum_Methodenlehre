@@ -1,0 +1,159 @@
+---
+title: "Praktikum Methodenlehre"
+subtitle: "Teil 3 - Grammar of Graphics"
+author: "Johannes Zauner"
+format: html
+---
+
+## Einführung
+
+Dieser dritte Abschnitt beschäftigt sich damit, die im letzten Abschnitt dargestellten Daten als hochwertige Grafik aufzubereiten.
+
+Zunächst laden wir die Daten für dieses Dokument nochmals neu.
+
+```{r}
+data <- read.csv("Data_Pupils.csv")
+```
+
+## ggplot2
+
+R verfügt wie in Teil 2 gezeigt über ein grundlegendes Plot-Werkzeug `plot`. Für hochwertige Visualiserungen lohnt es sich aber, darüber hinaus zu gehen. R verfügt über eine schier unendliche Anzahl an Zusatzinhalten und Funktionen, die man nach Belieben dem Grundprogramm hinzufügen kann. Gemeint sind sogenannte `packages`. Pakete in R enthalten Funktionen, Daten, oder kleine Programme, die jeweils einen ganz spezifischen Zielrahmen besitzen. 
+
+Das Paket welches wir für unsere Visualisierung benötigen heißt `ggplot2` und das *gg* steht für **Grammar of Graphics**. Die Idee dahinter lautet, dass Visualisierungen ähnlich wie Sprache, Regeln in Aufbau und Terminologie folgen. Wird in einer Sprache die richtig Vokabeln korrekt aneinandergereiht, entsteht ein verständlicher Satz. Bei ggplot entsteht eine ansprechende Visualisierung. Jeder Befehl beschäftigt sich damit mit einer eigenen Eigenschaft der Visualisierung, so dass modulare, feingliedrig einstellbare Grafiken entstehen.
+
+```{r}
+#install.packages wird nur bei der ersten Verwendung benötigt und muss danach gelöscht werden! Alternativ kann es auch mit dem #-Symbol wegkommentiert werden.
+# install.packages("ggplot2")
+library(ggplot2)
+```
+
+Im ersten Moment mag das kompliziert klingen. Aber wie beim erlenen jeder Sprache fängt man einfach an, und wird komplexer. Dabei hilft uns, dass sich auch die Visualierungen in einer Variable speichern lassen - so können wir Schrittweise ergänzen.
+
+Im allerersten Schritt bekommt `ggplot` die Information, welcher Datensatz visualisiert werden soll. Was auf die `x` und `y` Achse soll, wird über eine sogenannte Ästhetik Unterfunktion `aes()`, bestimmt.
+
+```{r}
+Plot <- ggplot(data = data, aes(x = Time, y = Diameter))
+Plot
+```
+
+Der entstehende Plot sieht noch nicht nach viel aus, er enthält aber bereits zentrale Informationen, die dem Datensatz zugrunde liegen - nämlich welche Datenspanne den Variablen `Diameter` und `Time` zugrunde liegt.
+
+Nun müssen wir der visuellen Grammatik noch sagen, was wir denn gerne auf dieser Leinwand dargestellt hätten. Punkte?
+
+```{r}
+Plot + geom_point()
+```
+
+Linien?
+```{r}
+Plot + geom_path()
+```
+
+Dichteplot?
+```{r}
+Plot + geom_hex()
+```
+
+Man sieht, ggplot erlaubt eine differenzierte Darstellung dessen **Was** ich zeigen möchte (Variablen), von dem **Wie** ich es zeigen möchte (Geome). Doch es endet nicht damit. Die Gramatik erlaubt weit komplexere Satzbauten, die in Feinheiten eingreigen.
+
+Was ist z.B., wenn ich die Liniendarstellung mag, aber die Linienfarbe soll abhängig von einer anderen Variable, dem `Stimulus` sein. 
+
+```{r}
+Plot + geom_path(aes(color = Stimulus))
+```
+
+Das erlaubt schon deulich mehr Differenzierung - aber zwei Dinge stören:
+
+1. die Farben passen nicht gut. Rot sollte zuerst kommen, dann Blau. Hierfür müssen wir die Daten wieder als Faktoren abspeichern.
+2. Es gibt eine horizontale Line, die jeweils die letzte Beobachtung rechts mit der nächsten ersten Beobachtung links verbindet. Das kommt daher, dass in der Tabelle diese Punkte nacheinander kommen. `geom_path()` verbindet sequentiell die Punkte mit einer Linie. Wir müssen ggplot mitteilen, dass jeder Durchlauf (`run`) eine eigene Gruppe (`group`) darstellt.
+
+```{r}
+data$Stimulus <- factor(data$Stimulus, levels = c("red", "blue"))
+Plot <- ggplot(data = data, 
+               aes(x = Time, 
+                   y = Diameter, 
+                   color = Stimulus))
+Plot + geom_path()
+```
+
+Besser. Ideal wären allerdings kräftige Farben, da auch die Stimuli kräftig (monochromatisch) sind - das verknüpft die Daten noch mehr mit dem experimentellen Setup. 
+
+Außerdem gibt eine horizontale Line, die jeweils die letzte Beobachtung rechts mit der nächsten ersten Beobachtung links verbindet. Das kommt daher, dass in der Tabelle diese Punkte nacheinander kommen. `geom_path()` verbindet sequentiell die Punkte mit einer Linie. Wir müssen ggplot mitteilen, dass jeder Durchlauf (`run`) eine eigene Gruppe (`group`) darstellt.
+
+```{r}
+Plot + 
+  geom_path(aes(group = run)) + 
+  scale_color_manual(values = c("red", "blue"))
+```
+
+Das ist schon ein ziemlich gut interpretierbarer Plot. Lieber als die fünf Einzeldurchläufe würde ich aber den mittleren Verlauf der beiden Stimuli sehen.
+
+```{r}
+Plot +
+  stat_summary(geom = "line", fun = mean) +
+  scale_color_manual(values = c("red", "blue"))
+
+```
+
+Auch nicht schlecht. Aber was, wenn ich die Bandbreite aller Messungen zusätzlich gerne im Hintergrund sehen möchte?
+
+```{r}
+Plot +
+  geom_path(aes(group = run), alpha =0.2) +
+  stat_summary(geom = "line", fun = mean) +
+  scale_color_manual(values = c("red", "blue"))
+```
+
+Nun haben wir ein gutes Gefühl dafür, wie sich die Pupille über die Zeit verhält. Nun wäre es schön, den Plot noch von den Beschriftungen her anzupassen und stilistisch zu verändern.
+
+```{r}
+Plot <- Plot +
+  geom_path(aes(group = run), alpha =0.2) +
+  stat_summary(geom = "line", fun = mean) +
+  scale_color_manual(labels = c("Rot", "Blau"), values = c("red", "blue")) +
+  theme_minimal()+
+  labs(x = "Zeit (s)", y = "Durchmesser (px)", title =
+         "Pupillendurchmesser in Abhängigkeit der Zeit und des Stimulus")
+
+Plot
+```
+
+Das ist eine aussagekräftige Grafik. Abhängig davon, welche Aussagen ich treffen möchte, kann ich aber noch verschiedene Transformationen durchführen. Sagen wir z.B., ich möchte die beiden Stimuli getrennt voneinander betrachten. Muss ich nun zwei Plots erzeugen? Nein. `facet_wrap()`to the rescue.
+
+```{r}
+Plot + facet_wrap(~Stimulus)
+```
+
+Und was ist, wenn ich gerne jeden einzelnen Durchlauf auch einzeln möchte?
+
+```{r}
+Plot + facet_wrap(~ run, ncol = 2, dir = "v")
+```
+
+Zurück zum ursprünglichen Plot. Wir möchten gerne den Lichtreiz markieren (0-1 Sekunde) und eine Markierung für den 6-PIPR - den Zeitpunkt 6 Sekunden nach Lichtreizende (d.h. bei Sekunde 7). Machen wir zuerst zweiteres, mittels `geom_vline`. 
+
+```{r}
+Plot + geom_vline(aes(xintercept = 7), lty = 2)
+```
+
+Nun ergänzen wir den Lichtreiz mit einer Anmerkung (`annotation`)
+
+```{r}
+Plot <- Plot + 
+  geom_vline(aes(xintercept = 7), lty = 2) +
+  annotate("rect", xmin = 0, xmax = 1, ymin = -Inf, ymax = Inf,
+           fill = "yellow", alpha = 0.4) +
+  annotate("text", x = 0.5, y = 30, label = "Lichtreiz",
+           hjust = 0, angle = 90)+
+  annotate("text", x = 6.8, y = 30, label = "6S-PIPR",
+           hjust = 0, vjust = 0, angle = 90)
+Plot
+  
+```
+
+An diesem Punkt beenden wir den grafischen Teil der Auswertung. Wir sichern zum Abschluss die Grafik als PDF Bild.
+
+```{r}
+ggsave("Pupillen_plot.pdf", plot = Plot, height = 4)
+```
+

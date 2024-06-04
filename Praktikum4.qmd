@@ -1,0 +1,75 @@
+---
+title: "Praktikum Methodenlehre"
+subtitle: "Teil 4 - Statistische Bewertung"
+author: "Johannes Zauner"
+format: html
+---
+
+## Einführung
+
+Dieser vierte und letzte Abschnitt des Praktikums beschäftigt sich damit, statistisch zu Untersuchen, ob es einen signifikanten Unterschied zwischen dem 6S-PIPR Wert bei einem roten im Vergleich zu einem blauen Stimulus gibt. Wir machen dies mit dem sogenannten `Wilcoxon-Mann-Whitney-U-Test`.
+
+Zunächst laden wir die Daten für dieses Dokument nochmals neu
+
+```{r}
+data <- read.csv("Data_Pupils.csv")
+```
+
+## Daten vorbereiten
+
+Unser Datensatz enthält die Stimulus-Werte für alle Zeitpunkte. Wir wollen aber nur den Zeitpunkt `7 Sekunden` untersuchen, d.h. 6 Sekunden nach Lichtreizende. Zunächst können wir prüfen, ob es diesen Zeitpunkt in unseren Daten gibt. Das machen wir mit einem sogenannten Logik-Test `Bedingung A == Bedingung B` prüft, ob beide Bedingungen gleich sind - falls ja, wird ein Wert zurückgegeben, falls nein, dann nicht.
+
+```{r}
+data[data$Time == 7,]
+```
+
+Wir erhalten 10 Werte zurück, einen für jeden Durchlauf, genau nach 7 Sekunden. In einer echten Auswertung würden wir vermutlich einen Mittelwert der jeweils halben Sekunde vor 7 und nach 7 bilden, für unsere Auswertung hier soll das aber genügen. Wir speichern dieses Subset an Daten nun in ein neues Objekt/Variable.
+
+```{r}
+data_subset <- data[data$Time == 7,]
+data_subset
+```
+
+Nun brauchen wir den Wilcoxon Test. Dieser ist, wie soll es anders sein, in einer Funktion in R untergebracht `wilcox.test`. Wenn wir nicht wissen, wie eine Funktion aufgebaut ist, welche Inputs sie braucht, und welche Outputs herauskommen, kann man über `?Funktionsname` eine Hilfe aufrufen.
+
+```{r}
+?wilcox.test
+```
+
+Wir möchten die Variante mit der Formel verwenden. Die Formel lautet dabei, dass wir glauben, dass sich der Wert des Pupillendurchmessers abhängig des Stimulus verändert: `Diameter ~ Stimulus`. Wir können diesen Zusammenhang schnell visuell prüfen, durch einen Basis-Plotaufruf...
+
+```{r}
+boxplot(Diameter ~ Stimulus, data = data_subset)
+```
+
+...oder durch einen ggplot
+
+```{r}
+library(ggplot2)
+ggplot(data_subset, aes(x=Stimulus, y=Diameter, fill = Stimulus)) + 
+  geom_boxplot() + 
+  scale_fill_manual(values = c("blue", "red"))+
+  theme_minimal()
+
+```
+
+Es scheint durchaus einen Unterschied zu geben. Schauen wir, was der Test sagt
+
+```{r}
+wilcox.test(Diameter ~ Stimulus, data = data_subset)
+```
+
+Der Test ergibt, dass ein signifikanter Unterschied zwischen dem Pupillendurchmesser nach blauem zu rotem Stimulus 6 Sekunden nach Lichtreizende gegeben ist (p\<0.01).
+
+Damit schließt diese kurze Einführung in R. Wenn Sie neugierig auf mehr sind, empfehle ich eine Reihe kostenloser Internet-Bücher, die Ihnen mehr zu R, Data Science, und Visualisierung vermitteln:
+
+[Data Visualization with R](https://rkabacoff.github.io/datavis/)
+
+[R for Datascience](https://r4ds.hadley.nz)
+
+[ggplot2: Elegant Graphics for Data Analysis](https://ggplot2-book.org)
+
+[Hands on Programming with R](https://rstudio-education.github.io/hopr/)
+
+[Advanced R](https://adv-r.hadley.nz)
+

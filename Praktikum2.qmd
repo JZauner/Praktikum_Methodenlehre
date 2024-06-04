@@ -1,0 +1,51 @@
+---
+title: "Praktikum Methodenlehre"
+subtitle: "Teil 2 - Daten laden in R"
+author: "Johannes Zauner"
+format: html
+---
+
+## Einführung
+
+Dieser zweite Abschnitt beschäftigt sich damit, wie wir Daten in R von einer externen Quelle laden und betrachten, und wie wir diese zunächst grob darstellen.
+
+## Daten laden
+
+Die Daten stehen in einem üblichen CSV-Format zur Verfügung. Die Datei sollte im selben Verzeichnis liegen, wie diese Skript-Datei! Der Dateiname lautet `Data_Pupils.csv`.
+
+```{r}
+data <- read.csv("Data_Pupils.csv")
+
+head(data)
+tail(data)
+```
+
+Mit dem `summary` Befehl, kann man sich einen Überblick über die Spalten verschaffen.
+
+```{r}
+summary(data)
+```
+Die Daten wurden einem Pupillometrieversuch entnommen. Bei dem Versuch wird den Probanden ein Lichtreiz von 1 Sekunde Dauer auf ein Auge appliziert. Auf dem anderen Auge wird der Pupillendurchmesser von einer Kamera erfasst. Je 5 mal wird ein roter Lichtreiz eingesetzt, danach folgen 5 blaue Lichtreize. Die Datei enthält alle Daten, um diesen Versuch eindeutig zu beschreiben.
+
+- Die erste Spalte `Diameter` enthält den Pupillendurchmesser (in der Maßeinheit Pixel).
+- Die zweite Spalte `run` sagt, um den wie vielten Durchlauf es sich handelt (d.h. wie viele Lichtreize inkl. dem aktuellen bereits appliziert wurden).
+- Die dritte Spalte `Time` gibt die Zeit in Sekunden bezogen auf den aktuellen Lichtreiz an. Die Zeit beginnt bei -2 Sekunden, d.h. vor der Reizapplikation. 0 bis 1 Sekunde entspricht der Reizapplikation, die Zeit danach der *Post-Illumination-Phase*, in der sich die Pupille redilatiert.
+- Die vierte und letzte Spalte `Stimulus` sagt uns welche Reizfarbe wir gerade haben (Rot/Blau).
+
+Wir können uns einen schnellen Überblick über die Daten verschaffen mit dem Plotbefehl `plot`.
+
+```{r}
+plot(data$Diameter)
+plot(data$run)
+plot(data$Time)
+plot(data$Time, data$Diameter)
+```
+
+Wenn wir den Stimulus plotten wollen, bekommen wir einen Fehler - es handelt sich schließlich nicht um einen numerischen Wert. Beim Stimulus (und auch bei run) handelt es sich um sogenannte Faktoren - d.h. Nominalskalierte Daten, mit endlicher Ausprägung. Bei Stimulus gibt es sogar nur zwei mögliche Ausprängungen. Wir können dennoch eine Übersicht gewinnen, indem wir diese Daten als Faktoren abspeichern.
+```{r}
+data$Stimulus <- factor(data$Stimulus, levels = c("red", "blue"))
+plot(data$Stimulus)
+plot(data$Stimulus, data$Diameter)
+```
+
+Diese Übersichtsplots geben selbstverständlich nur einen ersten Eindruck, damit man sich mit den Daten vertraut machen kann - das ist in jedem Datenanalyse-Projekt aber essentiell. Im nächsten Schritt machen wir daraus eine professionell gestaltete, hochwertige Grafik.
