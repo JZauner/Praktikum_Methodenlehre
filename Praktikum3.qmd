@@ -12,7 +12,7 @@ Dieser dritte Abschnitt beschäftigt sich damit, die im letzten Abschnitt darges
 Zunächst laden wir die Daten für dieses Dokument nochmals neu.
 
 ```{r}
-data <- read.csv("Data_Pupils.csv")
+data <- read.csv("Daten/Data_Pupils.csv")
 ```
 
 ## ggplot2

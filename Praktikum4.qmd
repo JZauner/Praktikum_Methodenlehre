@@ -12,7 +12,7 @@ Dieser vierte und letzte Abschnitt des Praktikums beschäftigt sich damit, stati
 Zunächst laden wir die Daten für dieses Dokument nochmals neu
 
 ```{r}
-data <- read.csv("Data_Pupils.csv")
+data <- read.csv("Daten/Data_Pupils.csv")
 ```
 
 ## Daten vorbereiten

@@ -14,7 +14,7 @@ Dieser zweite Abschnitt beschäftigt sich damit, wie wir Daten in R von einer ex
 Die Daten stehen in einem üblichen CSV-Format zur Verfügung. Die Datei sollte im selben Verzeichnis liegen, wie diese Skript-Datei! Der Dateiname lautet `Data_Pupils.csv`.
 
 ```{r}
-data <- read.csv("Data_Pupils.csv")
+data <- read.csv("Daten/Data_Pupils.csv")
 
 head(data)
 tail(data)
