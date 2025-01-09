@@ -2,7 +2,10 @@
 title: "Praktikum Methodenlehre"
 subtitle: "Teil 4 - Statistische Bewertung"
 author: "Johannes Zauner"
-format: html
+format: 
+  html:
+    self-contained: true
+    code-tools: true
 ---
 
 ## Einführung

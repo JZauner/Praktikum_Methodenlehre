@@ -2,7 +2,10 @@
 title: "Praktikum Methodenlehre"
 subtitle: "Teil 1 - Code ausführen"
 author: "Johannes Zauner"
-format: html
+format: 
+  html:
+    self-contained: true
+    code-tools: true
 ---
 
 ## Einführung

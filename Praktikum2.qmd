@@ -2,7 +2,10 @@
 title: "Praktikum Methodenlehre"
 subtitle: "Teil 2 - Daten laden in R"
 author: "Johannes Zauner"
-format: html
+format: 
+  html:
+    self-contained: true
+    code-tools: true
 ---
 
 ## Einführung

@@ -2,7 +2,10 @@
 title: "Praktikum Methodenlehre"
 subtitle: "Teil 3 - Grammar of Graphics"
 author: "Johannes Zauner"
-format: html
+format: 
+  html:
+    self-contained: true
+    code-tools: true
 ---
 
 ## Einführung
@@ -17,7 +20,7 @@ data <- read.csv("Daten/Data_Pupils.csv")
 
 ## ggplot2
 
-R verfügt wie in Teil 2 gezeigt über ein grundlegendes Plot-Werkzeug `plot`. Für hochwertige Visualiserungen lohnt es sich aber, darüber hinaus zu gehen. R verfügt über eine schier unendliche Anzahl an Zusatzinhalten und Funktionen, die man nach Belieben dem Grundprogramm hinzufügen kann. Gemeint sind sogenannte `packages`. Pakete in R enthalten Funktionen, Daten, oder kleine Programme, die jeweils einen ganz spezifischen Zielrahmen besitzen. 
+R verfügt wie in Teil 2 gezeigt über ein grundlegendes Plot-Werkzeug `plot`. Für hochwertige Visualisierungen lohnt es sich aber, darüber hinaus zu gehen. R verfügt über eine schier unendliche Anzahl an Zusatzinhalten und Funktionen, die man nach Belieben dem Grundprogramm hinzufügen kann. Gemeint sind sogenannte `packages`. Pakete in R enthalten Funktionen, Daten, oder kleine Programme, die jeweils einen ganz spezifischen Zielrahmen besitzen. 
 
 Das Paket welches wir für unsere Visualisierung benötigen heißt `ggplot2` und das *gg* steht für **Grammar of Graphics**. Die Idee dahinter lautet, dass Visualisierungen ähnlich wie Sprache, Regeln in Aufbau und Terminologie folgen. Wird in einer Sprache die richtig Vokabeln korrekt aneinandergereiht, entsteht ein verständlicher Satz. Bei ggplot entsteht eine ansprechende Visualisierung. Jeder Befehl beschäftigt sich damit mit einer eigenen Eigenschaft der Visualisierung, so dass modulare, feingliedrig einstellbare Grafiken entstehen.
 
